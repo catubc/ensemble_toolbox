@@ -425,34 +425,12 @@ def check_contours(file_name, A, Cn, thr=None, thr_method='max', maxthr=0.2, nrg
 
         ax.set_title("# Cells: "+str(len(x_array)), fontsize=15)
 
-        #*************** DRAW NEW CONTROUS **************
+        #*************** DRAW NEW CONTOURS **************
         ax.contour(y_array[previous_cell], x_array[previous_cell], Bmat_array[previous_cell], [thr_array[previous_cell]], linewidths=l_width, colors='red',alpha=0.9)
         ax.contour(y_array[nearest_cell], x_array[nearest_cell], Bmat_array[nearest_cell], [thr_array[nearest_cell]], linewidths=l_width, colors='blue',alpha=0.9)
 
         redraw_traces()
-        
-        #ax3.cla()
-        #ax3.plot(traces[:,previous_cell], color='red')
-        
-        #ax3.plot([int(frame.val),int(frame.val)],[ylim_min,ylim_max])
-        ##ax3.set_ylim(-25, np.max(traces[:,nearest_cell]*1.5))
-        #ax3.set_ylim(ylim_min, ylim_max)
-        #ax3.set_title("Cell: "+str(previous_cell), fontsize=15)
-        #ax3.set_xlim(0,len(traces))
 
-        #ax2.cla()
-        #ax2.plot(traces[:,nearest_cell], color='blue')
-        ##ax2.set_ylim(-50, np.max(traces[:,nearest_cell]*1.5))
-        #ax2.set_ylim(-50, 400)
-        #ax2.set_title("Cell: "+str(nearest_cell), fontsize=15)
-        #ax2.set_xlim(0,len(traces))
-
-        ##Draw new cell contours; 
-        #ax.contour(y_array[previous_cell], x_array[previous_cell], Bmat_array[previous_cell], [thr_array[previous_cell]], linewidths=l_width, colors='red',alpha=0.9)
-        #ax.contour(y_array[nearest_cell], x_array[nearest_cell], Bmat_array[nearest_cell], [thr_array[nearest_cell]], linewidths=l_width, colors='blue',alpha=0.9)
-
-        #fig.canvas.draw()
-        
 
     #***********************************************************************************
     #**************************** SELECT NEURON BUTTON *********************************
@@ -777,17 +755,19 @@ def nb_view_patches(file_name, Yr, A, C, b, f, d1, d2, YrA = None, image_neurons
         
     print x.shape
     print z.shape
-    y_array = z.T
-    t = np.arange(3000)
-    for k in range(len(y_array)):
-        #print x[k]
-        #print z[k]
-        plt.plot(t,y_array[k]+50*k)
-    
-        #x = np.arange(T)
-        #z = old_div(np.squeeze(np.array(Y_r[:, :].T)), 100)
+
+    if False: 
+        y_array = z.T
+        t = np.arange(3000)
+        for k in range(len(y_array)):
+            #print x[k]
+            #print z[k]
+            plt.plot(t,y_array[k]+50*k)
         
-    plt.show()
+            #x = np.arange(T)
+            #z = old_div(np.squeeze(np.array(Y_r[:, :].T)), 100)
+            
+        plt.show()
 
     plot = bpl.figure(plot_width=600, plot_height=300)
     plot.line('x', 'y', source=source, line_width=1, line_alpha=0.6)
@@ -832,75 +812,7 @@ def get_contours(A, Cn, thr=None, thr_method='max', maxthr=0.2, nrgthr=0.9, disp
             
         
     #"""
-    #A = csc_matrix(A)
-    #d, nr = np.shape(A)
-    ##if we are on a 3D video
-    #if len(dims) == 3:
-        #d1, d2, d3 = dims
-        #x, y = np.mgrid[0:d2:1, 0:d3:1]
-    #else:
-        #d1, d2 = dims
-        #x, y = np.mgrid[0:d1:1, 0:d2:1]
 
-    #coordinates = []
-
-    ##get the center of mass of neurons( patches )
-    #print A.shape
-    #print dims
-    ##cm = np.asarray([center_of_mass(a.toarray().reshape(dims, order='F')) for a in A.T])
-    #cm = []
-    #for a in A.T:
-        #temp = a.toarray(); print temp.shape
-        #temp = temp.reshape((62500,1), order='F')
-        #cm.append(center_of_mass(temp))
-    #cm = np.asarray(cm)
-    #print cm.shape
-    
-    ##for each patches
-    #for i in range(nr):
-        #pars = dict()
-        ##we compute the cumulative sum of the energy of the Ath component that has been ordered from least to highest
-        #patch_data = A.data[A.indptr[i]:A.indptr[i + 1]]
-        #indx = np.argsort(patch_data)[::-1]
-        #cumEn = np.cumsum(patch_data[indx]**2)
-
-        ##we work with normalized values
-        #cumEn /= cumEn[-1]
-        #Bvec = np.ones(d)
-
-        ##we put it in a similar matrix
-        #Bvec[A.indices[A.indptr[i]:A.indptr[i + 1]][indx]] = cumEn
-        #Bmat = np.reshape(Bvec, dims, order='F')
-        #pars['coordinates'] = []
-        ## for each dimensions we draw the contour
-        #for B in (Bmat if len(dims) == 3 else [Bmat]):
-            ##plotting the contour usgin matplotlib undocumented function around the thr threshold
-            #nlist = mpl._cntr.Cntr(y, x, B).trace(thr)
-
-            ##vertices will be the first half of the list
-            #vertices = nlist[:len(nlist) // 2]
-            ## this fix is necessary for having disjoint figures and borders plotted correctly
-            #v = np.atleast_2d([np.nan, np.nan])
-            #for k, vtx in enumerate(vertices):
-                #num_close_coords = np.sum(np.isclose(vtx[0, :], vtx[-1, :]))
-                #if num_close_coords < 2:
-                    #if num_close_coords == 0:
-                        ## case angle
-                        #newpt = np.round(old_div(vtx[-1, :], [d2, d1])) * [d2, d1]
-                        #vtx = np.concatenate((vtx, newpt[np.newaxis, :]), axis=0)
-
-                    #else:
-                        ## case one is border
-                        #vtx = np.concatenate((vtx, vtx[0, np.newaxis]), axis=0)
-                #v = np.concatenate((v, vtx, np.atleast_2d([np.nan, np.nan])), axis=0)
-
-            #pars['coordinates'] = v if len(dims) == 2 else (pars['coordinates'] + [v])
-        #pars['CoM'] = np.squeeze(cm[i, :])
-        #pars['neuron_id'] = i + 1
-        #coordinates.append(pars)
-    #return coordinates
-
-    #****************************
 
     if issparse(A):
         A = np.array(A.todense())
