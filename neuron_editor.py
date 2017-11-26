@@ -5,7 +5,7 @@ from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from utils import plot_contours, check_contours, nb_view_patches
+from utils import plot_contours, correct_ROIs, nb_view_patches
 
 class NeuronEditor(QtGui.QWidget):
     def __init__(self, parent):
@@ -43,10 +43,10 @@ class NeuronEditor(QtGui.QWidget):
         layout.addWidget(self.select_recording_lbl, row_index,1); row_index+=1
 
         #Correct ROIs
-        self.button_checkcountours = QPushButton('Review/Correct ROIs')
-        self.button_checkcountours.setMaximumWidth(200)
-        self.button_checkcountours.clicked.connect(self.correctROIs)
-        layout.addWidget(self.button_checkcountours, row_index, 0); row_index+=1
+        self.button_correct_ROIs = QPushButton('Review/Correct ROIs')
+        self.button_correct_ROIs.setMaximumWidth(200)
+        self.button_correct_ROIs.clicked.connect(self.correctROIs)
+        layout.addWidget(self.button_correct_ROIs, row_index, 0); row_index+=1
         
         #
         self.button_plotcontours = QPushButton('View ROIs (original)')
@@ -94,8 +94,8 @@ class NeuronEditor(QtGui.QWidget):
         self.lfp_tsf_file =  QtGui.QFileDialog.getOpenFileName(self, ".npz", self.root_dir,"*.npz *.npy")
 
         path_name, file_name = os.path.split(self.lfp_tsf_file)
-
         self.select_recording_lbl.setText(file_name)
+
 
     def tif_to_npy(self):
         #***** CONVERT TIF to NPY
@@ -105,17 +105,15 @@ class NeuronEditor(QtGui.QWidget):
 
         
     def correctROIs(self):
-        from utils import check_contours
-        check_contours(self.file_name, self.A, self.Cn, thr=0.95)
+        #from utils import correct_ROIs
+        correct_ROIs(self.file_name, self.A, self.Cn, thr=0.95)
 
 
     def plotContours(self):
-        from utils import plot_contours
         plot_contours(self.A, self.Cn, thr=0.9)
 
         
     def viewPatches(self):
-        from utils import nb_view_patches
         nb_view_patches(self.file_name, self.Yr, self.A, self.C, self.b, self.f, 250, 250, YrA = self.YrA, thr = 0.8, image_neurons=self.Cn, denoised_color='red')
 
-        pass
+
